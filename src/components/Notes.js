@@ -1,42 +1,64 @@
-import React, { useContext, useEffect, useRef, useState } from 'react'
-import NoteContext from '../context/notes/NoteContext'
-import AddNote from './AddNote';
-import NoteItem from './NoteItem';
+import React, { useContext, useEffect, useRef, useState } from "react";
+import NoteContext from "../context/notes/NoteContext";
+import AddNote from "./AddNote";
+import NoteItem from "./NoteItem";
 // import updateNote from './updateNote';
 
 function Notes() {
-    const context = useContext(NoteContext);
-    const { notes, getNotes } = context;
+  const context = useContext(NoteContext);
+  const { notes, getNotes, editNote } = context;
+  
+  const ref = useRef(null);
+  const refClose = useRef(null);
 
-    const [ text, setText ] = useState({title:"", description:"", tag:"General"})
+  const [text, setText] = useState({
+    id: "",
+    utitle: "",
+    utag: "",
+    udescription: ""
+  });
 
-    useEffect(() => {
-      getNotes();
-       // eslint-disable-next-line
-    }, [])
+  useEffect(() => {
+    getNotes();
+    // eslint-disable-next-line
+  }, []);
 
-    const onChange =(e)=> {
-      setText({ ...text, [e.target.name]: e.target.value })
-    }
-    const handleClick =(e)=> {
-        e.preventDefault();
-    }
+  const onChange = (e) => {
+    setText({ ...text, [e.target.name]: e.target.value });
+  };
+  
+  const updateNote = (currentText) => {
+    ref.current.click();
+    setText({id:currentText._id, utitle: currentText.title, utag: currentText.tag, udescription: currentText.description});
+  };
 
-    const ref = useRef(null);
-    
-    const updateNote = (note) => {
-      ref.current.click();
-    };
+  const handleClick = (e) => {
+    editNote(text.id, text.utitle, text.utag, text.udescription)
+    refClose.current.click();
+  };
 
   return (
-    <div className='container my-3'>
-        {/* Add Note Component */}
-        <AddNote />
+    <div className="container my-3">
+      {/* Add Note Component */}
+      <AddNote />
 
-        <button ref={ref} type="button" className="btn btn-primary d-none" data-bs-toggle="modal" data-bs-target="#exampleModalCenter" >
+      <button
+        ref={ref}
+        type="button"
+        className="btn btn-primary d-none"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModalCenter"
+      >
         Launch demo modal
       </button>
-      <div className="modal fade" id="exampleModalCenter" tabIndex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" >
+      <div
+        className="modal fade"
+        id="exampleModalCenter"
+        tabIndex="-1"
+        role="dialog"
+        aria-labelledby="exampleModalCenterTitle"
+        aria-hidden="true"
+      >
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
             <div className="modal-header d-flex justify-content-center">
@@ -53,32 +75,28 @@ function Notes() {
               </button> */}
             </div>
             <div className="modal-body">
-            
-            <form>
-          <div className="form-group">
-            {/* <label htmlFor="exampleFormControlInput1">Title</label> */}
-            <input type="text" className="form-control" id="title" name='title' placeholder="Title of your note" onChange={onChange} />
-          </div>
-          <div className="form-group my-3">
-            {/* <label htmlFor="exampleFormControlSelect1">Give Tag</label> */}
-            <input type="text" className="form-control" id="tag" name='tag' placeholder="Tag of your note" onChange={onChange} />
-          </div>
-          <div className="form-group">
-            {/* <label htmlFor="exampleFormControlTextarea1">Description</label> */}
-            <textarea className="form-control" id="description" name="description" rows="2" placeholder="Description of your note" onChange={onChange} ></textarea>
-          </div>
-        </form>
-
+              <form>
+                <div className="form-group">
+                  <input type="text" className="form-control" id="utitle" name="utitle" placeholder="Title of your note" value={text.utitle} onChange={onChange} />
+                </div>
+                <div className="form-group my-3">
+                  <input type="text" className="form-control" id="utag" name="utag" placeholder="Tag of your note" value={text.utag} onChange={onChange} />
+                </div>
+                <div className="form-group">
+                  <textarea className="form-control" id="udescription" name="udescription" rows="2" placeholder="Description of your note" value={text.udescription} onChange={onChange} ></textarea>
+                </div>
+              </form>
             </div>
             <div className="modal-footer d-flex justify-content-between">
               <button
+                ref={refClose}
                 type="button"
                 className="btn btn-secondary btn-sm"
                 data-bs-dismiss="modal"
               >
                 Close
               </button>
-              <button type="button" className="btn btn-primary btn-sm">
+              <button type="button" className="btn btn-primary btn-sm" onClick={handleClick}>
                 Update Note
               </button>
             </div>
@@ -86,15 +104,17 @@ function Notes() {
         </div>
       </div>
 
-        {/* Note item component */}
-        <div className='row'>
-            <h2>Your Notes</h2>
-            {notes.map((note)=>{
-            return <NoteItem key={note._id} updateNote={updateNote} note={note} />
-            })}
-        </div>
+      {/* Note item component */}
+      <div className="row">
+        <h2>Your Notes</h2>
+        {notes.map((note) => {
+          return (
+            <NoteItem key={note._id} updateNote={updateNote} note={note} />
+          );
+        })}
+      </div>
     </div>
-  )
+  );
 }
 
-export default Notes
+export default Notes;

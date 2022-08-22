@@ -25,7 +25,7 @@ const NoteState = (props) => {
   };
 
   // Add a Note
-  const addNote = async (title, description, tag) => {
+  const addNote = async (title, tag, description) => {
     // API call
     // Default options are marked with *
   const response = await fetch(`${host}/api/notes/addnote`, {
@@ -35,7 +35,7 @@ const NoteState = (props) => {
       'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjJmYjQ1NTMwMmY4NGJlMWUwNjY3M2Q4In0sImlhdCI6MTY2MDY0NjUxMH0.C6wLBY7ITri8KgQXkoN72UTjKqdrHAldiVioCGFCABI'
     },
     
-    body: JSON.stringify({title, description, tag}) // body data type must match
+    body: JSON.stringify({title, tag, description}) // body data type must match
   });
     const note = await response.json();
   //
@@ -44,7 +44,7 @@ const NoteState = (props) => {
   };
 
   // Edit a Note
-  const editNote = async (id, title, description, tag) => {
+  const editNote = async (id, title, tag, description) => {
     // const element = notes.filter((note) => {
     //   return note._id === id;
     // });
@@ -60,22 +60,25 @@ const NoteState = (props) => {
       'auth-token': 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VyIjp7ImlkIjoiNjJmYjQ1NTMwMmY4NGJlMWUwNjY3M2Q4In0sImlhdCI6MTY2MDY0NjUxMH0.C6wLBY7ITri8KgQXkoN72UTjKqdrHAldiVioCGFCABI'
     },
     
-    body: JSON.stringify({title, description, tag})
+    body: JSON.stringify({title, tag, description})
   });
   const json = await response.json();
   console.log(json)
 
   //
 
+    let newNotes = JSON.parse(JSON.stringify(notes))
     // logic for edit in client side
     for (let index = 0; index < notes.length; index++) {
-      const element = notes[index];
+      const element = newNotes[index];
       if (element._id === id) {
-        element.title = title;
-        element.tag = tag;
-        element.description = description;
+        newNotes[index].title = title;
+        newNotes[index].tag = tag;
+        newNotes[index].description = description;
+        break;
       }
     }
+    setNotes(newNotes);
   };
 
   // Delete a Note

@@ -5,7 +5,7 @@ function AddNote() {
     const context = useContext(NoteContext);
     const { addNote } = context;
 
-    const [ text, setText ] = useState({title:"", description:"", tag:"General"})
+    const [ text, setText ] = useState({title:"", tag:"General", description:""})
 
     const onChange =(e)=> {
       setText({ ...text, [e.target.name]: e.target.value })
@@ -13,7 +13,7 @@ function AddNote() {
     const handleClick =(e)=> {
         e.preventDefault();
         // addNote(text);
-        addNote(text.title, text.description, text.tag);
+        addNote(text.title, text.tag, text.description);
     }
     
   return (

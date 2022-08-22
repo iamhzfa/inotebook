@@ -55,11 +55,11 @@ router.put("/updatenote/:id", fetchuser, async (req, res) => {
     if (title) {
       newNote.title = title;
     }
-    if (description) {
-      newNote.description = description;
-    }
     if (tag) {
       newNote.tag = tag;
+    }
+    if (description) {
+      newNote.description = description;
     }
 
     // check some validation
