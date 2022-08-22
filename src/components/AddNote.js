@@ -8,8 +8,7 @@ function AddNote() {
     const [ text, setText ] = useState({title:"", description:"", tag:"General"})
 
     const onChange =(e)=> {
-       
-        setText({ ...text, [e.target.name]: e.target.value })
+      setText({ ...text, [e.target.name]: e.target.value })
     }
     const handleClick =(e)=> {
         e.preventDefault();
@@ -34,7 +33,7 @@ function AddNote() {
             <textarea className="form-control" id="description" name="description" rows="2" placeholder="Description of your note" onChange={onChange} ></textarea>
           </div>
           <div className='text-center'>
-          <button type='submit' className='btn btn-primary btn-sm my-3' onClick={handleClick}>Add Note</button>
+          <button type='submit' className='btn btn-primary btn-sm mt-3' onClick={handleClick}>Add Note</button>
           </div>
         </form>
     </div>
