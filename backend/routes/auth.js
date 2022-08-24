@@ -63,21 +63,23 @@ router.post('/login', [
     body('email', "Enter a valid email").isEmail(),
     body('password', "Write a password").exists(),
 ], async(req, res)=>{
+    //create a flag
+    let success = false;
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({ success, errors: errors.array() });
     } 
 
     const {email, password} = req.body;
     try {
         let user = await User.findOne({email});
         if(!user){
-          return res.status(400).json({error: "Please try with correct credentials"});
+          return res.status(400).json({success, error: "Please try with correct credentials"});
         }
         const passwordCompare = await bcrypt.compare(password, user.password);
         if(!passwordCompare){
-          res.status(400).json({error: "Please try with correct credentials"});
+          res.status(400).json({success, error: "Please try with correct credentials"});
         }
         const data = {
           user : {
@@ -85,8 +87,9 @@ router.post('/login', [
           }
         }
   
-        const jwtToken = jwt.sign(data, JWT_SECRET);       
-        res.json({jwtToken})
+        const jwtToken = jwt.sign(data, JWT_SECRET);  
+        success = true;     
+        res.json({success, jwtToken})
 
     }catch(error){
       console.error(error.message);

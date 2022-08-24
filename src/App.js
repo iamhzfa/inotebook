@@ -5,6 +5,8 @@ import About from './components/About';
 import Contact from './components/Contact';
 import {Routes, Route} from "react-router-dom";
 import NoteState from './context/notes/NoteState';
+import Signup from './components/Signup';
+import Login from './components/Login';
 
 function App() {
   return (
@@ -18,6 +20,8 @@ function App() {
         <Route exact path="/" element={<Home />} />
         <Route exact path="/about" element={<About />} />
         <Route exact path="/contactus" element={<Contact />} />
+        <Route exact path="/login" element={<Login />} />
+        <Route exact path="/signup" element={<Signup />} />
         <Route path="*" element={<Home />} />
       </Routes>
       </div>

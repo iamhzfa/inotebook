@@ -96,7 +96,7 @@ function Notes() {
               >
                 Close
               </button>
-              <button type="button" className="btn btn-primary btn-sm" onClick={handleClick}>
+              <button disabled={text.utitle.length < 3} type="button" className="btn btn-primary btn-sm" onClick={handleClick}>
                 Update Note
               </button>
             </div>
@@ -107,11 +107,15 @@ function Notes() {
       {/* Note item component */}
       <div className="row">
         <h2>Your Notes</h2>
+        <div className="container mx-2">
+          {/* if no notes available then display this line */}
+        {notes.length === 0 && "There is no notes to display"}
+        </div>
         {notes.map((note) => {
           return (
             <NoteItem key={note._id} updateNote={updateNote} note={note} />
-          );
-        })}
+            );
+          })}
       </div>
     </div>
   );
