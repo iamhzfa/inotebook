@@ -1,11 +1,42 @@
-import React from 'react';
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+
 
 function Signup() {
 
-  const handleSubmit = (e) => {
-    // editNote(text.id, text.utitle, text.utag, text.udescription)
-    // refClose.current.click();
+  let navigate = useNavigate();
+  const host = "http://localhost:5000";
+  const [credentials, setCredentials] = useState({name: "", email:"", password:""})
+
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const {name, email, password} = credentials;
+    const response = await fetch(`${host}/api/auth/createuser`, {
+      method: 'POST', // *GET, POST, PUT, DELETE, etc.
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      
+      body: JSON.stringify({name, email, password})
+    });
+    const json = await response.json();
+    console.log(json)
+
+    if(json.success){
+      //save the auth token and redirect to home page
+      navigate('/')
+    }
+    else{
+      alert("Invalid details")
+    }
+
   };
+  
+  const onChange = (e) => {
+    setCredentials({ ...credentials, [e.target.name]: e.target.value });
+  };
+
 
   return (
     <form className="vh-120" onSubmit={handleSubmit}>
@@ -22,6 +53,7 @@ function Signup() {
                       type="text"
                       id="name"
                       name="name"
+                      onChange={onChange}
                       placeholder="Enter your name"
                       className="form-control form-control-lg"
                     />
@@ -31,6 +63,7 @@ function Signup() {
                       type="email"
                       id="email"
                       name="email"
+                      onChange={onChange}
                       placeholder="Enter your email"
                       className="form-control form-control-lg"
                     />
@@ -41,6 +74,7 @@ function Signup() {
                       type="password"
                       id="password"
                       name="password"
+                      onChange={onChange}
                       placeholder="Set your password"
                       className="form-control form-control-lg"
                     />
@@ -50,6 +84,7 @@ function Signup() {
                       type="password"
                       id="cpassword"
                       name="cpassword"
+                      onChange={onChange}
                       placeholder="Confirm your password"
                       className="form-control form-control-lg"
                     />

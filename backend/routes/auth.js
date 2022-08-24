@@ -19,17 +19,19 @@ router.post('/createuser', [
     body('email', "Enter a valid email").isEmail(),
     body('password', "Minimum length of password is 5").isLength({ min: 5 }),
 ], async(req, res)=>{
+    //create a flag
+    let success = false;
     // Finds the validation errors in this request and wraps them in an object with handy functions
     const errors = validationResult(req);
     if (!errors.isEmpty()) {
-      return res.status(400).json({ errors: errors.array() });
+      return res.status(400).json({success, errors: errors.array() });
     }
     //  try is used for detecting errors 
     try{
     // check the user with same email is exist or not
     let user = await User.findOne({email : req.body.email});
     if(user){
-      return res.status(400).json({error : "Sorry can't create a user with same email"})
+      return res.status(400).json({success, error : "Sorry can't create a user with same email"})
     }
     const salt = await bcrypt.genSalt(10);
     const secPass = await bcrypt.hash(req.body.password, salt);
@@ -48,7 +50,8 @@ router.post('/createuser', [
       }
 
       const jwtToken = jwt.sign(data, JWT_SECRET);       
-      res.json({jwtToken})
+      success = true;
+      res.json({success, jwtToken})
       // catch is used to catching errors
     }catch(error){
         console.error(error.message);
