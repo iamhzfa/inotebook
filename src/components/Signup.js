@@ -2,12 +2,27 @@ import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 
-function Signup() {
+function Signup(props) {
 
   let navigate = useNavigate();
   const host = "http://localhost:5000";
   const [credentials, setCredentials] = useState({name: "", email:"", password:""})
-
+  
+  // const  matchPassword =()=> {  
+  //   let flag = false;
+  //   var pw1 = document.getElementById("password");  
+  //   var pw2 = document.getElementById("cpassword");  
+  //   if(pw1 === pw2)  
+  //   {   
+  //     flag=true;
+  //     return true;
+  //   } 
+  //   else{
+  //     flag=false;
+  //     props.showAlert('Password did not match', 'danger');
+  //     return flag;
+  //   }
+  // }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -25,10 +40,12 @@ function Signup() {
 
     if(json.success){
       //save the auth token and redirect to home page
-      navigate('/')
+      localStorage.setItem('token', json.authtoken)
+      navigate('/login')
+      props.showAlert('Account created successfully, please login..', 'success');
     }
     else{
-      alert("Invalid details")
+      props.showAlert('Account not created with same email', 'danger');
     }
 
   };
@@ -36,7 +53,6 @@ function Signup() {
   const onChange = (e) => {
     setCredentials({ ...credentials, [e.target.name]: e.target.value });
   };
-
 
   return (
     <form className="vh-120" onSubmit={handleSubmit}>
@@ -56,6 +72,8 @@ function Signup() {
                       onChange={onChange}
                       placeholder="Enter your name"
                       className="form-control form-control-lg"
+                      minLength={3}
+                      required
                     />
                   </div>
                   <div className="form-outline form-white mb-4">
@@ -66,6 +84,7 @@ function Signup() {
                       onChange={onChange}
                       placeholder="Enter your email"
                       className="form-control form-control-lg"
+                      required
                     />
                   </div>
 
@@ -77,6 +96,8 @@ function Signup() {
                       onChange={onChange}
                       placeholder="Set your password"
                       className="form-control form-control-lg"
+                      minLength={5}
+                      required
                     />
                   </div>
                   <div className="form-outline form-white mb-5">
@@ -87,6 +108,7 @@ function Signup() {
                       onChange={onChange}
                       placeholder="Confirm your password"
                       className="form-control form-control-lg"
+                      
                     />
                   </div>
 
@@ -98,8 +120,7 @@ function Signup() {
 
                   <button
                     className="btn btn-outline-dark px-5"
-                    type="submit"
-                  >
+                    type="submit" >
                     Create Account
                   </button>
                 </div>

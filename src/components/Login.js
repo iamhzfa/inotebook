@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 // import "./login.css";
 
-function Login() {
+function Login(props) {
 
   let navigate = useNavigate();
   const host = "http://localhost:5000";
@@ -25,9 +25,11 @@ function Login() {
     if(json.success){
       //save the auth token and redirect to home page
       navigate('/')
+      props.showAlert('Logged in successfully', 'success');
     }
     else{
-      alert("Invalid details")
+      
+      props.showAlert('Please try with correct credentials', 'danger');
     }
 
   };
